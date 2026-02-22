@@ -21,14 +21,15 @@
 
 ---
 
-## Domain Driven Design & Clean Architecture
+## System Architecture, Capacity Planning, Domain Driven Design & Clean Architecture
 
-1. [System Architecture Basics](docs/system-architecture/17-system-architecture-basics.md)
+1. [System Architecture Basics ✅](docs/system-architecture/17-system-architecture-basics.md)
 2. [System Architecture Decision Matrix ✅](docs/system-architecture/architecture-decision-matrix.md)
-2. [Consistent Hashing](docs/system-architecture/18-consistent-hashing.md)
-3. [Domain Driven Design & Clean Architecture](docs/system-architecture/DDD-clean-architecture.md)
-4. [Domain-Driven Design (DDD) In-Depth](docs/system-architecture/DDD-in-depth.md)
-5. [Optimised Live Streaming](docs/system-architecture/optimised-live-streaming.md)
+3. [Capacity Planning & Server Requirements ✅](docs/system-architecture/capacity-planning-server-requirement.md)
+4. [Consistent Hashing](docs/system-architecture/18-consistent-hashing.md)
+5. [Domain Driven Design & Clean Architecture](docs/system-architecture/DDD-clean-architecture.md)
+6. [Domain-Driven Design (DDD) In-Depth](docs/system-architecture/DDD-in-depth.md)
+7. [Optimised Live Streaming](docs/system-architecture/optimised-live-streaming.md)
 
 --- 
 
