@@ -1,0 +1,510 @@
+graph TD
+    Start([System Architecture Decision Flow]) --> BusinessReqs[Define Business Requirements]
+    
+    BusinessReqs --> RTOCheck{RTO/RPO Requirements?}
+    
+    %% RTO/RPO Branch - Critical Early Decision
+    RTOCheck -->|RTO < 1min / RPO ~0| MissionCritical[Mission Critical System]
+    RTOCheck -->|RTO < 1hr / RPO < 5min| HighCriticality[High Criticality System]
+    RTOCheck -->|RTO < 24hr / RPO < 1hr| StandardCriticality[Standard Criticality]
+    
+    MissionCritical --> InfraType
+    HighCriticality --> InfraType
+    StandardCriticality --> InfraType
+    
+    InfraType{Infrastructure Type?} -->|On-Premise| OnPremPath[On-Premise Path]
+    InfraType -->|Cloud| CloudPath[Cloud Path]
+    InfraType -->|Multi-Cloud| MultiCloudPath[Multi-Cloud Strategy]
+    InfraType -->|Hybrid| HybridPath[Hybrid Cloud]
+    
+    OnPremPath --> CostConsideration
+    CloudPath --> CostConsideration
+    MultiCloudPath --> VendorLockIn[Implement Abstraction Layer]
+    HybridPath --> NetworkingComplexity[Plan Hybrid Connectivity]
+    
+    VendorLockIn --> CostConsideration
+    NetworkingComplexity --> CostConsideration
+    
+    %% Cost as Early Filter
+    CostConsideration{Budget Constraints?} -->|Strict Budget| CostOptimizedPath[Cost-Optimized Architecture]
+    CostConsideration -->|Moderate Budget| BalancedPath[Balanced Cost-Performance]
+    CostConsideration -->|Performance Priority| PerformancePath[Performance-First Design]
+    
+    CostOptimizedPath --> NFRStart
+    BalancedPath --> NFRStart
+    PerformancePath --> NFRStart
+    
+    NFRStart[Assess Non-Functional Requirements] --> Latency{Latency Requirements?}
+    
+    %% Latency Branch
+    Latency -->|< 10ms Critical| UltraLowLatency[Ultra Low Latency Design]
+    Latency -->|< 100ms High| LowLatency[Low Latency Design]
+    Latency -->|< 1s Standard| StandardLatency[Standard Latency Design]
+
+    UltraLowLatency --> EdgeComputing{Global Users?}
+    LowLatency --> EdgeComputing
+    StandardLatency --> CacheDecision2[Cache: Optional/DB-level]
+    
+    EdgeComputing -->|Yes| EdgeStrategy[Deploy Edge Computing + CDN]
+    EdgeComputing -->|No| CacheDecision1[In-Memory Cache: Redis/Memcached]
+    
+    EdgeStrategy --> GeographicReqs{Data Residency Requirements?}
+    CacheDecision1 --> GeographicReqs
+    CacheDecision2 --> GeographicReqs
+    
+    GeographicReqs -->|Strict Compliance| RegionalIsolation[Regional Data Isolation]
+    GeographicReqs -->|Standard| MultiRegionStrategy[Multi-Region with Replication]
+    GeographicReqs -->|None| SingleRegion[Single Region Deployment]
+    
+    RegionalIsolation --> ComputeModel
+    MultiRegionStrategy --> ComputeModel
+    SingleRegion --> ComputeModel
+    
+    %% Compute Model Decision
+    ComputeModel{Compute Model?} -->|Event-driven/Bursty| Serverless[Serverless: Lambda/Cloud Functions]
+    ComputeModel -->|Microservices/Stateless| Containers[Containers: Kubernetes/ECS]
+    ComputeModel -->|Stateful/Legacy| VMs[Virtual Machines]
+    ComputeModel -->|ML/GPU Workloads| SpecializedCompute[GPU Instances/ML Platforms]
+    
+    Serverless --> StorageStrategy
+    Containers --> ContainerOrch{Orchestration Complexity?}
+    VMs --> StorageStrategy
+    SpecializedCompute --> MLPipeline[ML Pipeline: Kubeflow/SageMaker]
+    
+    ContainerOrch -->|High| Kubernetes[Kubernetes Cluster]
+    ContainerOrch -->|Managed| ManagedContainers[ECS/Cloud Run/AKS]
+    
+    Kubernetes --> StorageStrategy
+    ManagedContainers --> StorageStrategy
+    MLPipeline --> StorageStrategy
+    
+    %% Storage Strategy
+    StorageStrategy{Storage Requirements?} -->|Object Storage| ObjectStore[S3/Blob Storage + Lifecycle Policies]
+    StorageStrategy -->|Block Storage| BlockStore[EBS/Persistent Disks]
+    StorageStrategy -->|File Storage| FileStore[EFS/NFS/File Share]
+    StorageStrategy -->|Mixed| PolyglotStorage[Multi-Storage Strategy]
+    
+    ObjectStore --> StorageTiers[Define Hot/Warm/Cold Tiers]
+    BlockStore --> StorageTiers
+    FileStore --> StorageTiers
+    PolyglotStorage --> StorageTiers
+    
+    StorageTiers --> CDNDecision{Static Content?}
+    
+    CDNDecision -->|Yes| UseCDN[Deploy CDN: CloudFlare/Akamai/CloudFront]
+    CDNDecision -->|No| SkipCDN[Edge Caching Only]
+    
+    UseCDN --> AvailabilityCheck
+    SkipCDN --> AvailabilityCheck
+    
+    %% Availability Branch
+    AvailabilityCheck{SLA Requirements?} -->|99.999% Five 9s| HighAvailability[High Availability Architecture]
+    AvailabilityCheck -->|99.99% Four 9s| StandardHA[Standard HA]
+    AvailabilityCheck -->|99.9% Three 9s| BasicHA[Basic HA]
+    
+    HighAvailability --> MultiRegion[Multi-Region Deployment]
+    StandardHA --> MultiAZ[Multi-AZ Deployment]
+    BasicHA --> SingleAZ[Single AZ with Backups]
+    
+    MultiRegion --> NetworkingArch
+    MultiAZ --> NetworkingArch
+    SingleAZ --> NetworkingArch
+    
+    %% Networking Architecture
+    NetworkingArch[Design Network Architecture] --> VPCDesign[VPC Design: Public/Private/Isolated Subnets]
+    VPCDesign --> DNSStrategy[DNS Strategy: Route53/Cloud DNS]
+    DNSStrategy --> NetworkSecurity[Network Security: Security Groups/NACLs]
+    NetworkSecurity --> Connectivity{External Connectivity?}
+    
+    Connectivity -->|VPN Required| VPNSetup[Site-to-Site VPN]
+    Connectivity -->|Dedicated Line| DirectConnect[Direct Connect/Express Route]
+    Connectivity -->|Internet Only| InternetGateway[Internet Gateway + NAT]
+    
+    VPNSetup --> LoadBalancing
+    DirectConnect --> LoadBalancing
+    InternetGateway --> LoadBalancing
+    
+    LoadBalancing{Load Balancing Strategy?} -->|Multi-Region| GlobalLB[Global Load Balancer: Route53/Traffic Manager]
+    LoadBalancing -->|Multi-AZ| RegionalLB[Regional Load Balancer: ALB/NLB]
+    LoadBalancing -->|Single AZ| StandardLB_New[Standard Load Balancer]
+    
+    GlobalLB --> LBType
+    RegionalLB --> LBType
+    StandardLB_New --> LBType
+    
+    LBType{Traffic Type?} -->|HTTP/HTTPS| Layer7LB[Layer 7 ALB]
+    LBType -->|TCP/UDP| Layer4LB[Layer 4 NLB]
+    LBType -->|Both| HybridLB[Hybrid LB Strategy]
+    
+    Layer7LB --> ScalabilityCheck
+    Layer4LB --> ScalabilityCheck
+    HybridLB --> ScalabilityCheck
+    
+    %% Scalability Branch
+    ScalabilityCheck{Scalability Needs?} -->|Extreme Growth| HyperScale[Hyper-Scale Architecture]
+    ScalabilityCheck -->|High Growth| HighScale[High Scalability]
+    ScalabilityCheck -->|Moderate| ModerateScale[Moderate Scalability]
+    
+    HyperScale --> MultiTenancy{Multi-Tenant System?}
+    HighScale --> MultiTenancy
+    ModerateScale --> MultiTenancy
+    
+    MultiTenancy -->|Yes| TenantIsolation{Isolation Level?}
+    MultiTenancy -->|No| MicroservicesDecision
+    
+    TenantIsolation -->|Database per Tenant| DBPerTenant[Separate Databases]
+    TenantIsolation -->|Schema per Tenant| SchemaPerTenant[Separate Schemas]
+    TenantIsolation -->|Row Level| RowLevelSecurity[Shared DB with RLS]
+    
+    DBPerTenant --> MicroservicesDecision
+    SchemaPerTenant --> MicroservicesDecision
+    RowLevelSecurity --> MicroservicesDecision
+    
+    MicroservicesDecision{Architecture Pattern?}
+    
+    HyperScale --> MicroservicesDecision1[Microservices Mandatory]
+    MicroservicesDecision -->|Complex Domain| MicroservicesDecision2{Team Size?}
+    MicroservicesDecision -->|Simple Domain| MicroservicesDecision3{Team Expertise?}
+    
+    MicroservicesDecision2 -->|Large Team 50+| Microservices[Microservices Architecture]
+    MicroservicesDecision2 -->|Medium Team 20-50| ModularMonolith[Modular Monolith]
+    
+    MicroservicesDecision3 -->|High DevOps Skills| Microservices
+    MicroservicesDecision3 -->|Limited Skills| Monolith[Monolithic Architecture]
+    
+    MicroservicesDecision1 --> Microservices
+    
+    Microservices --> EventDriven{Async Communication Needed?}
+    ModularMonolith --> EventDriven
+    Monolith --> StandardLB[Standard Patterns]
+    
+    %% Event-Driven Architecture
+    EventDriven -->|Yes - High Throughput| MessageBroker{Message Pattern?}
+    EventDriven -->|Yes - Event Sourcing| EventStore[Event Store + CQRS]
+    EventDriven -->|No| APIGateway
+    
+    MessageBroker -->|Streaming| Kafka[Apache Kafka / Kinesis]
+    MessageBroker -->|Queue-based| MessageQueue[RabbitMQ / SQS]
+    MessageBroker -->|Pub/Sub| PubSubService[Pub/Sub / EventBridge]
+    
+    Kafka --> DataPipeline{Real-time Processing?}
+    MessageQueue --> APIGateway
+    PubSubService --> APIGateway
+    EventStore --> APIGateway
+    
+    DataPipeline -->|Yes| StreamProcessing[Stream Processing: Flink/Spark Streaming]
+    DataPipeline -->|Batch| BatchProcessing[Batch ETL: Airflow/Glue]
+    
+    StreamProcessing --> APIGateway
+    BatchProcessing --> APIGateway
+    
+    %% API Gateway and Service Mesh
+    APIGateway{API Gateway Needed?} -->|External APIs| APIGatewayImpl[Kong / Apigee / AWS API Gateway]
+    APIGateway -->|Internal Only| ServiceMeshDecision
+    
+    APIGatewayImpl --> AuthStrategy
+    
+    ServiceMeshDecision{Service Mesh?} -->|Microservices + Complex Routing| ServiceMesh[Istio / Linkerd / Consul]
+    ServiceMeshDecision -->|Simple Architecture| NoServiceMesh[Standard Service Discovery]
+    
+    ServiceMesh --> AuthStrategy
+    NoServiceMesh --> AuthStrategy
+    StandardLB --> AuthStrategy
+    
+    %% Authentication and Authorization
+    AuthStrategy{Auth Requirements?} -->|External Users| OAuth2Impl[OAuth2 / OIDC]
+    AuthStrategy -->|API Keys| APIKeyMgmt[API Key Management]
+    AuthStrategy -->|Service-to-Service| mTLS[Mutual TLS]
+    AuthStrategy -->|Enterprise SSO| SAML[SAML / LDAP Integration]
+    
+    OAuth2Impl --> IdentityProvider
+    APIKeyMgmt --> IdentityProvider
+    mTLS --> IdentityProvider
+    SAML --> IdentityProvider
+    
+    IdentityProvider{Identity Provider?} -->|Managed| ManagedIdP[Auth0 / Cognito / Azure AD]
+    IdentityProvider -->|Self-Hosted| SelfHostedIdP[Keycloak / Ory]
+    
+    ManagedIdP --> MFARequired
+    SelfHostedIdP --> MFARequired
+    
+    MFARequired{MFA Required?} -->|Yes| MFAImpl[Implement TOTP/SMS/Biometric]
+    MFARequired -->|No| ZeroTrust
+    
+    MFAImpl --> ZeroTrust
+    ZeroTrust[Consider Zero Trust Architecture] --> CommunicationProtocol
+    
+    %% Communication Protocol
+    CommunicationProtocol{Communication Pattern?} -->|Real-time Bi-directional| WebSockets[WebSockets]
+    CommunicationProtocol -->|Low Latency RPC| gRPC[gRPC for Service-to-Service]
+    CommunicationProtocol -->|Flexible Queries| GraphQL[GraphQL API]
+    CommunicationProtocol -->|Standard REST| HTTP[HTTP/REST APIs]
+    
+    WebSockets --> ConsistencyCheck
+    gRPC --> ConsistencyCheck
+    GraphQL --> ConsistencyCheck
+    HTTP --> ConsistencyCheck
+    
+    %% Consistency and Data
+    ConsistencyCheck{Consistency Requirements?} -->|Strong Consistency| StrongConsist[Strong Consistency Model]
+    ConsistencyCheck -->|Eventual Consistency| EventualConsist[Eventual Consistency Model]
+    ConsistencyCheck -->|Mixed| HybridConsist[Hybrid Consistency Model]
+    
+    StrongConsist --> DatabaseChoice1[RDBMS: PostgreSQL/MySQL]
+    EventualConsist --> DatabaseChoice2[NoSQL: Cassandra/DynamoDB]
+    HybridConsist --> DatabaseChoice3[Polyglot Persistence]
+    
+    DatabaseChoice1 --> DataScale{Data Volume?}
+    DatabaseChoice2 --> DataScale
+    DatabaseChoice3 --> DataScale
+    
+    %% Data Scaling and Partitioning
+    DataScale -->|> 1TB / High Write| Partitioning[Implement Sharding/Partitioning]
+    DataScale -->|< 1TB| StandardDB_Scale[Standard Database]
+    
+    Partitioning --> ShardingStrategy{Sharding Strategy?}
+    ShardingStrategy -->|Geographic| GeoSharding[Geographic Sharding]
+    ShardingStrategy -->|Hash-based| HashSharding[Consistent Hashing]
+    ShardingStrategy -->|Range-based| RangeSharding[Range Partitioning]
+    
+    GeoSharding --> DataArchitecture
+    HashSharding --> DataArchitecture
+    RangeSharding --> DataArchitecture
+    StandardDB_Scale --> DataArchitecture
+    
+    %% Data Architecture
+    DataArchitecture{Analytics Requirements?} -->|Heavy Analytics| DataWarehouse[Data Warehouse: Snowflake/Redshift/BigQuery]
+    DataArchitecture -->|Real-time Analytics| HybridOLTPOLAP[Hybrid OLTP + OLAP]
+    DataArchitecture -->|Transactional Only| OLTPOnly[OLTP Database Only]
+    DataArchitecture -->|ML/AI Workloads| DataLake[Data Lake: S3/ADLS + Catalog]
+    
+    DataWarehouse --> ETLStrategy
+    HybridOLTPOLAP --> ETLStrategy
+    DataLake --> DataMesh{Decentralized Data?}
+    OLTPOnly --> CQRS_Decision
+    
+    DataMesh -->|Yes| DataMeshImpl[Data Mesh Architecture]
+    DataMesh -->|No| ETLStrategy
+    
+    DataMeshImpl --> ETLStrategy
+    
+    ETLStrategy{Data Pipeline?} -->|Real-time| StreamingETL[Streaming ETL: Kafka Connect/Flink]
+    ETLStrategy -->|Batch| BatchETL[Batch ETL: Airflow/dbt]
+    ETLStrategy -->|Both| LambdaArchitecture[Lambda Architecture]
+    
+    StreamingETL --> CQRS_Decision
+    BatchETL --> CQRS_Decision
+    LambdaArchitecture --> CQRS_Decision
+    
+    CQRS_Decision{Read-Heavy + Complex Queries?} -->|Yes| CQRS[Implement CQRS Pattern]
+    CQRS_Decision -->|No| StandardDB[Standard DB Pattern]
+    
+    CQRS --> ReadReplicas[Read Replicas for Queries]
+    StandardDB --> ReplicationStrategy
+    ReadReplicas --> ReplicationStrategy
+    
+    %% Durability and Replication
+    ReplicationStrategy{Data Durability SLA?} -->|Mission Critical| SyncReplication[Synchronous Replication + Multi-Region]
+    ReplicationStrategy -->|High Importance| AsyncReplication[Asynchronous Replication + Multi-AZ]
+    ReplicationStrategy -->|Standard| BackupStrategy[Regular Backups]
+    
+    SyncReplication --> RedundancyLevel1[Redundancy: 3+ copies across regions]
+    AsyncReplication --> RedundancyLevel2[Redundancy: 2-3 copies across AZs]
+    BackupStrategy --> RedundancyLevel3[Redundancy: Daily backups]
+    
+    RedundancyLevel1 --> ResiliencePatterns
+    RedundancyLevel2 --> ResiliencePatterns
+    RedundancyLevel3 --> ResiliencePatterns
+    
+    %% Resilience Patterns
+    ResiliencePatterns[Apply Resilience Patterns] --> CircuitBreaker[Circuit Breaker Pattern]
+    CircuitBreaker --> Bulkhead[Bulkhead Pattern]
+    Bulkhead --> RetryPolicy[Retry with Backoff]
+    RetryPolicy --> Timeout[Timeout Policies]
+    Timeout --> RateLimiting
+    
+    %% Rate Limiting and Protection
+    RateLimiting{Rate Limiting Needed?} -->|API Protection| APIRateLimit[API Gateway Rate Limiting]
+    RateLimiting -->|DDoS Protection| DDoSProtection[WAF + Rate Limiting]
+    RateLimiting -->|Internal Services| ServiceRateLimit[Service-Level Rate Limiting]
+    
+    APIRateLimit --> ObservabilitySetup
+    DDoSProtection --> ObservabilitySetup
+    ServiceRateLimit --> ObservabilitySetup
+    
+    %% Observability
+    ObservabilitySetup[Setup Observability Stack] --> Monitoring[Monitoring: Prometheus/Grafana/DataDog]
+    Monitoring --> Logging[Centralized Logging: ELK/Splunk]
+    Logging --> Tracing[Distributed Tracing: Jaeger/Zipkin]
+    Tracing --> Alerting[Alerting: PagerDuty/Opsgenie]
+    Alerting --> Metrics[Custom Metrics & Dashboards]
+    
+    Metrics --> DeploymentStrategy
+    
+    %% Deployment Strategy
+    DeploymentStrategy{Deployment Pattern?} -->|Zero Downtime Critical| BlueGreen[Blue-Green Deployment]
+    DeploymentStrategy -->|Risk Mitigation| Canary[Canary Deployment]
+    DeploymentStrategy -->|Progressive| Rolling[Rolling Deployment]
+    DeploymentStrategy -->|Feature Control| FeatureFlags[Feature Flags + Dark Launch]
+    
+    BlueGreen --> CICDPipeline
+    Canary --> CICDPipeline
+    Rolling --> CICDPipeline
+    FeatureFlags --> CICDPipeline
+    
+    %% CI/CD and IaC
+    CICDPipeline[Design CI/CD Pipeline] --> IaC{Infrastructure as Code?}
+    
+    IaC -->|Yes| IaCTool{IaC Tool?}
+    IaC -->|No| ManualInfra[Manual Infrastructure Management]
+    
+    IaCTool -->|Declarative| Terraform[Terraform / Pulumi]
+    IaCTool -->|Cloud-Native| CloudFormation[CloudFormation / ARM / Deployment Manager]
+    IaCTool -->|Configuration Mgmt| Ansible[Ansible / Chef / Puppet]
+    
+    Terraform --> GitOps
+    CloudFormation --> GitOps
+    Ansible --> GitOps
+    ManualInfra --> TestingStrategy
+    
+    GitOps{GitOps Workflow?} -->|Yes| GitOpsImpl[ArgoCD / Flux]
+    GitOps -->|No| StandardCI[Jenkins / GitLab CI / GitHub Actions]
+    
+    GitOpsImpl --> TestingStrategy
+    StandardCI --> TestingStrategy
+    
+    %% Testing Strategy
+    TestingStrategy[Define Testing Strategy] --> UnitTests[Unit Tests: 70-80% Coverage]
+    UnitTests --> IntegrationTests[Integration Tests]
+    IntegrationTests --> ContractTests{Microservices?}
+    
+    ContractTests -->|Yes| PactTests[Contract Tests: Pact]
+    ContractTests -->|No| E2ETests
+    
+    PactTests --> E2ETests[E2E Tests: Cypress/Playwright]
+    E2ETests --> PerformanceTests{Performance Critical?}
+    
+    PerformanceTests -->|Yes| LoadTesting[Load Testing: JMeter/k6/Gatling]
+    PerformanceTests -->|No| SecurityTesting
+    
+    LoadTesting --> StressTesting[Stress Testing + Capacity Planning]
+    StressTesting --> SecurityTesting
+    
+    SecurityTesting[Security Testing] --> SAST[SAST: SonarQube/Checkmarx]
+    SAST --> DAST[DAST: OWASP ZAP/Burp Suite]
+    DAST --> DependencyScan[Dependency Scanning: Snyk/Dependabot]
+    DependencyScan --> ContainerSec{Containers Used?}
+    
+    ContainerSec -->|Yes| ImageScanning[Container Image Scanning]
+    ContainerSec -->|No| ChaosEngineering
+    
+    ImageScanning --> RuntimeSecurity[Container Runtime Security]
+    RuntimeSecurity --> RegistrySecurity[Secure Container Registry]
+    RegistrySecurity --> ChaosEngineering
+    
+    %% Chaos Engineering and Testing
+    ChaosEngineering{Implement Chaos Engineering?} -->|Yes - High Reliability Needed| ChaosTools[Chaos Monkey/Gremlin/LitmusChaos]
+    ChaosEngineering -->|No - But Test Failure Modes| FailureSimulation[Periodic Failure Simulation]
+    
+    ChaosTools --> SLI_SLO
+    FailureSimulation --> SLI_SLO
+    
+    %% SLI/SLO Definition
+    SLI_SLO[Define SLIs and SLOs] --> ErrorBudget[Calculate Error Budget]
+    ErrorBudget --> CapacityPlanning[Capacity Planning]
+    CapacityPlanning --> MigrationCheck{Legacy System Migration?}
+    
+    %% Migration Strategy
+    MigrationCheck -->|Yes| MigrationStrategy{Migration Approach?}
+    MigrationCheck -->|No| FinalValidation
+    
+    MigrationStrategy -->|Gradual| StranglerFig[Strangler Fig Pattern]
+    MigrationStrategy -->|Phased| PhasedMigration[Phased Migration with Dual-Run]
+    MigrationStrategy -->|Big Bang| BigBangMigration[Big Bang Migration]
+    
+    StranglerFig --> APIVersioning[API Versioning Strategy]
+    PhasedMigration --> APIVersioning
+    BigBangMigration --> APIVersioning
+    
+    APIVersioning --> DataMigration{Data Migration?}
+    
+    DataMigration -->|Live Sync| LiveDataSync[Live Data Synchronization]
+    DataMigration -->|Batch| BatchDataMigration[Batch Data Migration]
+    DataMigration -->|Cutover| CutoverMigration[Cutover Window Migration]
+    
+    LiveDataSync --> FinalValidation
+    BatchDataMigration --> FinalValidation
+    CutoverMigration --> FinalValidation
+    
+    %% Final Validation
+    FinalValidation[Architecture Review & Validation] --> PerformanceSLI{Performance SLIs Met?}
+    
+    PerformanceSLI -->|Yes| ReliabilitySLI{Reliability SLIs Met?}
+    PerformanceSLI -->|No| OptimizePerformance[Optimize Performance]
+    
+    OptimizePerformance --> ReliabilitySLI
+    
+    ReliabilitySLI -->|Yes| SecurityValidation
+    ReliabilitySLI -->|No| ImproveReliability[Improve Reliability Patterns]
+    
+    ImproveReliability --> SecurityValidation
+    
+    SecurityValidation[Security Validation] --> PenetrationTest[Penetration Testing]
+    PenetrationTest --> ComplianceCheck[Compliance Check: GDPR/HIPAA/SOC2]
+    ComplianceCheck --> DataGovernance[Data Governance Framework]
+    DataGovernance --> AuditLogging[Audit Logging Implementation]
+    AuditLogging --> CostOptimization{Cost Optimization?}
+    
+    CostOptimization -->|Critical| CostAnalysis[FinOps: Reserved Instances/Spot/Savings Plans]
+    CostOptimization -->|Standard| StandardCost[Right-sizing Resources]
+    
+    CostAnalysis --> CostMonitoring[Cost Monitoring & Alerts]
+    StandardCost --> CostMonitoring
+    
+    CostMonitoring --> OperationalReadiness
+    CostMonitoring --> OperationalReadiness
+    
+    %% Operational Readiness
+    OperationalReadiness[Operational Readiness Check] --> Runbooks[Create Runbooks]
+    Runbooks --> IncidentResponse[Incident Response Plan]
+    IncidentResponse --> OnCall[On-Call Rotation Setup]
+    OnCall --> DisasterRecovery[DR Plan + Testing]
+    DisasterRecovery --> DeveloperExperience
+    
+    %% Developer Experience
+    DeveloperExperience{Developer Experience?} -->|Priority| DevTooling[Local Dev Environment + Inner Loop]
+    DeveloperExperience -->|Standard| BasicDevSetup[Standard Dev Setup]
+    
+    DevTooling --> DevPlatform[Developer Platform: Backstage/Port]
+    BasicDevSetup --> Documentation
+    DevPlatform --> Documentation
+    
+    %% Documentation
+    Documentation[Documentation] --> ADR[Architecture Decision Records]
+    ADR --> SystemDiagram[System Architecture Diagram]
+    SystemDiagram --> DataFlowDiagram[Data Flow Diagrams]
+    DataFlowDiagram --> APIDoc[API Documentation: OpenAPI/GraphQL Schema]
+    APIDoc --> OperationalDoc[Operational Procedures]
+    OperationalDoc --> TechDebtLog[Technical Debt Registry]
+    
+    TechDebtLog --> FinalReview{Architecture Approved?}
+    
+    FinalReview -->|Yes| End([Architecture Design Complete])
+    FinalReview -->|No| IdentifyGaps[Identify Gaps and Iterate]
+    
+    IdentifyGaps --> NFRStart
+    
+    %% Styling
+    classDef critical fill:#ff6b6b,stroke:#c92a2a,stroke-width:3px,color:#fff
+    classDef important fill:#339af0,stroke:#1971c2,stroke-width:2px,color:#fff
+    classDef standard fill:#51cf66,stroke:#2f9e44,stroke-width:2px,color:#fff
+    classDef decision fill:#ffd43b,stroke:#fab005,stroke-width:2px,color:#000
+    classDef security fill:#f06595,stroke:#d6336c,stroke-width:2px,color:#fff
+    classDef data fill:#845ef7,stroke:#7048e8,stroke-width:2px,color:#fff
+    
+    class Start,End,MissionCritical critical
+    class InfraType,RTOCheck,AvailabilityCheck,ScalabilityCheck,ConsistencyCheck,ChaosEngineering,ComputeModel,EventDriven,MigrationCheck decision
+    class HighAvailability,MultiRegion,Microservices,CQRS,SyncReplication,Kubernetes,ServiceMesh,APIGatewayImpl important
+    class SecurityValidation,PenetrationTest,ZeroTrust,MFAImpl,ImageScanning security
+    class DataArchitecture,DataLake,DataWarehouse,Partitioning,EventStore data
+    
