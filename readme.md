@@ -46,3 +46,4 @@
 ## Real World Architectures
 
 1. [Pre-Signed URLs](docs/real-world-architectures/01-pre-signed-urls.md)
+2. [YouTube Recommendation System](docs/real-world-architectures/02-youtube-recommendation-system.md)
