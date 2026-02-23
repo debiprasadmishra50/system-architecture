@@ -25,6 +25,7 @@ Used to derive system requirements from two known inputs.
 
 ```
 Concurrent = Throughput × Latency
+
 Throughput = Concurrent / Latency
 ```
 

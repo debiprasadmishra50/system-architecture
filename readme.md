@@ -26,6 +26,7 @@
 1. [System Architecture Basics ✅](docs/system-architecture/17-system-architecture-basics.md)
 2. [System Architecture Decision Matrix ✅](docs/system-architecture/architecture-decision-matrix.md)
 3. [Capacity Planning & Server Requirements ✅](docs/system-architecture/capacity-planning-server-requirement.md)
+4. [Deployment Strategies ✅](docs/system-architecture/deployment-strategies.md)
 4. [Consistent Hashing](docs/system-architecture/18-consistent-hashing.md)
 5. [Domain Driven Design & Clean Architecture](docs/system-architecture/DDD-clean-architecture.md)
 6. [Domain-Driven Design (DDD) In-Depth](docs/system-architecture/DDD-in-depth.md)

@@ -334,7 +334,7 @@ Percentile latencies (P90, P95, P99) measure the distribution of response times 
 ### Table of Contents
 1. [What is a Proxy?](#what-is-a-proxy)
 2. [Forward Proxy](#forward-proxy)
-3. [Reverse Proxy](#reverse-proxy)
+3. [Reverse Proxy](#reverse-proxy-gateway)
 4. [Comparison: Forward Proxy vs Reverse Proxy](#comparison-forward-proxy-vs-reverse-proxy)
 5. [Architect's Perspective](#architects-perspective-proxy)
 
