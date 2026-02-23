@@ -43,10 +43,11 @@
 6. [HyperLogLog](docs/system-architecture/core-building-blocks/hyperloglog.md)
 7. [Apache Kafka](docs/system-architecture/core-building-blocks/apache-kafka.md)
 8. [MapReduce](docs/system-architecture/core-building-blocks/map-reduce.md)
+9. [Optimised Live Streaming](docs/system-architecture/core-building-blocks/optimised-live-streaming.md)
 
 ## Real World Architectures
 
 1. [Pre-Signed URLs](docs/real-world-architectures/01-pre-signed-urls.md)
 2. [YouTube Recommendation System](docs/real-world-architectures/02-youtube-recommendation-system.md)
 3. [Diskless Kafka](docs/real-world-architectures/03-diskless-kafka.md)
-4.
+4. []
