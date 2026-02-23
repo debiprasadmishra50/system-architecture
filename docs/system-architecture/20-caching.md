@@ -6,6 +6,11 @@
 3. [LFU Cache (Least Frequently Used)](#lfu-cache-least-frequently-used)
 4. [Comparison: LRU vs LFU](#comparison-lru-vs-lfu)
 5. [Cache Invalidation Strategies](#cache-invalidation-strategies)
+    - [Time-Based (TTL - Time To Live)](#time-based-ttl---time-to-live)
+    - [Event-Based Invalidation](#event-based-invalidation)
+    - [LRU/LFU Eviction](#lru/lfu-eviction)
+    - [Write-Through](#write-through)
+    - [Write-Behind (Write-Back)](#write-behind-write-back)
 6. [Architect's Perspective](#architects-perspective)
 
 ### What is Caching?
