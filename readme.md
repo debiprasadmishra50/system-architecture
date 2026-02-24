@@ -53,4 +53,4 @@
 1. [Pre-Signed URLs](docs/real-world-architectures/01-pre-signed-urls.md)
 2. [YouTube Recommendation System](docs/real-world-architectures/02-youtube-recommendation-system.md)
 3. [Diskless Kafka](docs/real-world-architectures/03-diskless-kafka.md)
-4. []
+4. [Nginx HAproxy ALB NLB IPVS](docs/real-world-architectures/04-nginx-haproxy-alb-nlb-ipvs.md)
