@@ -25,7 +25,8 @@
 22. [✅ Durability / Disaster Recovery](./32-durability.md)
 23. [✅ Read/Write Ratio](./33-read-write-ratio.md)
 24. [✅ Fault Tolerance, Resilience & Reliability](./34-fault-tolerance-resilience-reliability.md)
-25. [✅ Architecture Decision Matrix ✅](./architecture-decision-matrix.md)
+25. [✅ Maintainability and Cost](./35-maintainability-cost.md)
+26. [✅ Architecture Decision Matrix ✅](./architecture-decision-matrix.md)
 
 ---
 

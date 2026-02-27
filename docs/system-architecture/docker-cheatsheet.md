@@ -32,6 +32,10 @@
 | docker exec -it \<container-ID\> sh                              | Get a Shell for a running container to execute any command inside the Linux Running Container                                          | docker exec -it e51511d63ecb sh                                                       |
 |                                                                  | Another way to get a shell with starting of container is                                                                               | docker run -it [image-name] sh                                                        |
 | docker run -p \<port-localhost\>:\<container-port\> \<image-ID\> | Port Forwarding or port mapping from localhost to container port                                                                       | docker run -p 8080:8080 debirapid/simpleweb                                           |
+| docker build <folder-name>                                       | Build an image from the Dockerfile in the given folder                                                                                | docker build .                                                                          |
+| docker build -t <docker_id>/<repo/project_name>:<version> folder-name>                                       | Build an image from the Dockerfile in the given folder along with tag name                                                                                | docker build -t debirapid/my-redis:1.0.0 .                                                                          |
+| docker push <docker_id>/<repo/project_name>:<version> | Push the image to the docker hub                                                                                                      | docker push debirapid/my-redis:1.0.0                                                   |
+| docker pull <docker_id>/<repo/project_name>:<version> | Pull the image from the docker hub                                                                                                    | docker pull debirapid/my-redis:1.0.0                                                   |
 
 ## Build Image
 
@@ -111,3 +115,46 @@ Step 4: Run the new container
 ```console
 docker run <SHA: container ID>
 ```
+
+## Docker Compose
+
+    - Docker Compose is a tool for defining and running multi-container Docker applications.
+    - It uses YAML files to configure application services.
+    - With a single command, you can create and start all the services from your configuration.
+    - It simplifies the management of complex applications with multiple interdependent services.
+    - Docker Compose is a great way to define and run multi-container applications in development and testing environments.
+    - It is not recommended for production use.
+    - It is recommended to use Kubernetes for production use.
+
+## Example
+
+```yml
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+  db:
+    image: postgres:14.5
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_HOST_AUTH_METHOD=trust
+
+```
+
+```console
+docker-compose up
+```
+
+### To Shutdown all
+
+```console
+docker-compose down
+```
+
+--- 
