@@ -12,6 +12,12 @@
    - [Resource Cost Breakdown](#resource-cost-breakdown)
    - [Cost Optimization Strategies](#cost-optimization-strategies)
 3. [Real-World Impact and Minimization](#real-world-impact-and-minimization)
+   - [Case Study 1: E-Commerce Platform](#case-study-1-e-commerce-platform)
+   - [Case Study 2: SaaS Application](#case-study-2-saas-application)
+4. [Minimization Strategies by Level](#minimization-strategies-by-level)
+5. [Cost Monitoring Dashboard](#cost-monitoring-dashboard)
+6. [Key Takeaways](#key-takeaways)
+
 
 ---
 
